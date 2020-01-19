@@ -4,38 +4,49 @@
 // but you don't so you're going to write it from scratch:
 
 var stringifyJSON = function(obj) {
-  let result = '';
+let result = '';
 
-  function checkObj(obj) {
+  function checkArray(obj) {
     if (Array.isArray(obj)) {
       let tempArr = obj.map(function(item, index, obj) {
         if (Array.isArray(item) && item.length === 0) {
           return `[${new Array()}]`;
         }
         if (Array.isArray(item)) {
-            return checkObj(item);
+            return checkArray(item);
         } else {
           if (typeof item === 'string') {
             return `"${item}"`;
           } else {
-            return item
+            return item;
           }
         }
       });
-      return `[${tempArr}]`
-      // result += `[${tempArr}]`;
-      // return result;
+    return `[${tempArr}]`;
     } else {
       if (typeof obj === 'string') {
-        // result += '"' + obj +'"';
-        return '"' + obj +'"';;
+        return '"' + obj +'"';
       } else {
-        // result += `${obj}`;
         return `${obj}`;
       }
-
     }
   }
 
-  return checkObj(obj);;
+
+
+  // function checkObject(obj) {
+  //   if (Object.keys(obj).length === 0 && obj.constructor === Object) {
+  //     result += `{}`;
+  //       return;
+  //   }
+  // }
+
+
+
+
+  console.log(checkArray(obj));
+  // console.log(checkObject(obj));
+  // isArray = checkArray(obj);
+  // isObject = checkObject(obj);
+  return checkArray(obj);
 };
