@@ -4,38 +4,39 @@
 // but you don't so you're going to write it from scratch:
 
 var stringifyJSON = function(obj) {
-let result = "";
 
-  // function checkArray(obj) {
-  //   if (Array.isArray(obj)) {
-  //     let tempArr = obj.map(function(item, index, obj) {
-  //       if (Array.isArray(item) && item.length === 0) {
-  //         return `[${new Array()}]`;
-  //       }
-  //       if (Array.isArray(item)) {
-  //           return checkArray(item);
-  //       } else {
-  //         if (typeof item === 'string') {
-  //           return `"${item}"`;
-  //         } else {
-  //           return item;
-  //         }
-  //       }
-  //     });
-  //   return `[${tempArr}]`;
-  //   } else {
-  //     if (typeof obj === 'string') {
-  //       return '"' + obj +'"';
-  //     } else {
-  //       return `${obj}`;
-  //     }
-  //   }
-  // }
+  function checkArray(obj) {
+    if (Array.isArray(obj)) {
+      let tempArr = obj.map(function(item, index, obj) {
+        if (Array.isArray(item) && item.length === 0) {
+          return `[${new Array()}]`;
+        }
+        if (Array.isArray(item)) {
+            return checkArray(item);
+        } else {
+          if (typeof item === 'string') {
+            return `"${item}"`;
+          } else {
+            return item;
+          }
+        }
+      });
+    return `[${tempArr}]`;
+    } else {
+      if (typeof obj === 'string') {
+        return '"' + obj +'"';
+      } else if (obj.constructor !== Object) {
+        return `${obj}`;
+      }
+    }
+  }
 
 
 
   function checkObject(obj) {
-
+    if (Array.isArray(obj)) {
+      return checkArray(obj);
+    }
     if (typeof obj === 'string') {
       return '"' + obj + '"';
     } else if (obj === null || obj.constructor === Boolean) {
