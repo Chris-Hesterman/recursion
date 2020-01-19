@@ -14,6 +14,9 @@ var stringifyJSON = function(obj) {
         if (Array.isArray(item)) {
             return checkArray(item);
         } else {
+          if (item.constructor === Object) {
+            return checkObject(item);
+          }
           if (typeof item === 'string') {
             return `"${item}"`;
           } else {
@@ -39,7 +42,7 @@ var stringifyJSON = function(obj) {
     }
     if (typeof obj === 'string') {
       return '"' + obj + '"';
-    } else if (obj === null || obj.constructor === Boolean) {
+    } else if (obj === null || (obj.hasOwnProperty('constructor') && obj.constructor === Boolean)) {
       return obj;
     }
     if (Object.keys(obj).length === 0 && obj.constructor === Object) {
