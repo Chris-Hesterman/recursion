@@ -4,6 +4,7 @@
 // but you don't so you're going to write it from scratch:
 
 var stringifyJSON = function(obj) {
+  let isObj = false;
 
   function checkArray(obj) {
     if (Array.isArray(obj)) {
@@ -19,22 +20,20 @@ var stringifyJSON = function(obj) {
           }
           if (typeof item === 'string') {
             return `"${item}"`;
+          } else if (item === undefined || typeof item === 'function') {
+            return null;
           } else {
             return item;
           }
         }
       });
-    return `[${tempArr}]`;
-    } else {
-      if (typeof obj === 'string') {
+      return `[${tempArr}]`;
+    } else if (typeof obj === 'string') {
         return '"' + obj +'"';
-      } else if (obj.constructor !== Object) {
+    } else if (obj !== Object(obj)) {
         return `${obj}`;
-      }
     }
   }
-
-
 
   function checkObject(obj) {
     if (Array.isArray(obj)) {
@@ -42,8 +41,10 @@ var stringifyJSON = function(obj) {
     }
     if (typeof obj === 'string') {
       return '"' + obj + '"';
-    } else if (obj === null || (obj.hasOwnProperty('constructor') && obj.constructor === Boolean)) {
+    } else if (obj === null || obj === true || obj === false) {
       return obj;
+    } else if (obj === undefined || typeof obj === 'function') {
+      return;
     }
     if (Object.keys(obj).length === 0 && obj.constructor === Object) {
         return `{}`;
@@ -54,24 +55,21 @@ var stringifyJSON = function(obj) {
       for (let i = 0; i < objKeys.length; i++) {
         let key = `${objKeys[i]}`;
         let val = checkObject(obj[objKeys[i]]);
-        newObj += `"${key}":`;
-        newObj += val;
-        if (i + 1 < objKeys.length) {
-          newObj += ',';
+        if (val === undefined || typeof val === Function) {
+          newObj = newObj
+        } else {
+          newObj += `"${key}":`;
+          newObj += val;
+          if (i + 1 < objKeys.length) {
+            newObj += ',';
+          }
         }
-
       }
       newObj = `{${newObj}}`;
       return newObj;
     }
+
   }
 
-
-
-
-  // console.log(checkObject(obj));
-  // console.log(checkObject(obj));
-  // isArray = checkArray(obj);
-  // isObject = checkObject(obj);
-  return `${checkObject(obj)}`;
-};
+  return checkArray(obj) ? `${checkArray(obj)}`: `${checkObject(obj)}`;
+}
