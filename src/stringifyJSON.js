@@ -39,6 +39,7 @@ var stringifyJSON = function(obj) {
     if (Array.isArray(obj)) {
       return checkArray(obj);
     }
+
     if (typeof obj === 'string') {
       return '"' + obj + '"';
     } else if (obj === null || obj === true || obj === false) {
@@ -46,9 +47,11 @@ var stringifyJSON = function(obj) {
     } else if (obj === undefined || typeof obj === 'function') {
       return;
     }
+
     if (Object.keys(obj).length === 0 && obj.constructor === Object) {
         return `{}`;
     }
+
     if (Object.keys(obj).length > 0 && obj.constructor === Object) {
       let newObj = ''
       let objKeys = Object.keys(obj);
@@ -68,8 +71,6 @@ var stringifyJSON = function(obj) {
       newObj = `{${newObj}}`;
       return newObj;
     }
-
   }
-
   return checkArray(obj) ? `${checkArray(obj)}`: `${checkObject(obj)}`;
 }
