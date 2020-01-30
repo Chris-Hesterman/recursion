@@ -8,7 +8,7 @@ var getElementsByClassName = function(className) {
   let elements = [];
   let start = document.body;
 
-  function checkClass(node) {
+  const checkClass = function(node) {
     let children = node.childNodes;
 
     if (node.classList) {
@@ -16,11 +16,13 @@ var getElementsByClassName = function(className) {
         elements.push(node);
       }
     }
-    if (!children) return;
+    if (!children) {
+      return;
+    }
     for (let child of children) {
       checkClass(child);
     }
-  }
+  };
   checkClass(start);
   return elements;
 };

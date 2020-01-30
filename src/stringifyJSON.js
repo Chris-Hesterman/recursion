@@ -6,14 +6,14 @@
 var stringifyJSON = function(obj) {
   let isObj = false;
 
-  function checkArray(obj) {
+  const checkArray = function(obj) {
     if (Array.isArray(obj)) {
       let tempArr = obj.map(function(item, index, obj) {
         if (Array.isArray(item) && item.length === 0) {
           return `[${new Array()}]`;
         }
         if (Array.isArray(item)) {
-            return checkArray(item);
+          return checkArray(item);
         } else {
           if (item.constructor === Object) {
             return checkObject(item);
@@ -29,13 +29,13 @@ var stringifyJSON = function(obj) {
       });
       return `[${tempArr}]`;
     } else if (typeof obj === 'string') {
-        return '"' + obj +'"';
+      return '"' + obj + '"';
     } else if (obj !== Object(obj)) {
-        return `${obj}`;
+      return `${obj}`;
     }
-  }
+  };
 
-  function checkObject(obj) {
+  const checkObject = function(obj) {
     if (Array.isArray(obj)) {
       return checkArray(obj);
     }
@@ -49,17 +49,17 @@ var stringifyJSON = function(obj) {
     }
 
     if (Object.keys(obj).length === 0 && obj.constructor === Object) {
-        return `{}`;
+      return '{}';
     }
 
     if (Object.keys(obj).length > 0 && obj.constructor === Object) {
-      let newObj = ''
+      let newObj = '';
       let objKeys = Object.keys(obj);
       for (let i = 0; i < objKeys.length; i++) {
         let key = `${objKeys[i]}`;
         let val = checkObject(obj[objKeys[i]]);
         if (val === undefined || typeof val === Function) {
-          newObj = newObj
+          newObj = newObj;
         } else {
           newObj += `"${key}":`;
           newObj += val;
@@ -71,6 +71,6 @@ var stringifyJSON = function(obj) {
       newObj = `{${newObj}}`;
       return newObj;
     }
-  }
-  return checkArray(obj) ? `${checkArray(obj)}`: `${checkObject(obj)}`;
-}
+  };
+  return checkArray(obj) ? `${checkArray(obj)}` : `${checkObject(obj)}`;
+};

@@ -4,61 +4,45 @@
 // but you're not, so you'll write it from scratch:
 var parseJSON = function(json) {
   let index = 0;
-  let char = charAt(index);
+  let char = json.charAt(index);
+  let newJSON = json.slice(1);
+  let result;
 
   const next = function() {
-    index +=;
+    index++;
     char = json.charAt(index);
-  }
+    return char;
+  };
 
-  const value = function(json) {
-    switch(char) {
-      case '{':
-        return object();
-      case '[':
-        return array();
-      case '\"':
-        return string();
-      case 't':
-        return bool();
-      case 'f':
-        return bool();
-      case 'n':
-        return nul();
-      default:
-        if (char === '-' || (char >= 0 && char <= 9)) {
-          return number();
-        } else {
-          return 'error, bad JSON';
-        }
-    }
-  }
+  const value = function() {};
 
   const array = function() {
-
-  }
+    let arr = [];
+    next();
+    while (char !== ']') {
+      let item = value(char);
+      arr.push(item);
+    }
+    return arr;
+  };
 
   const object = function() {
+    let obj = {};
+    next();
+  };
+  const boolean = function() {};
 
-
-  }
-  const boolean = function() {
-
-  }
-
-  const nullness = function() {
-
-  }
+  const nullness = function() {};
 
   const number = function() {
+    return char;
+  };
 
-  }
+  const string = function() {};
 
-  const string = function() {
+  result = value();
 
-  }
-
-
-  // return (new Function("return " + json))();
-
+  return result;
 };
+
+// return (new Function("return " + json))();
