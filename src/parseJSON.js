@@ -5,7 +5,6 @@
 var parseJSON = function(json) {
   let index = 0;
   let char = json.charAt(index);
-  let newJSON = json.slice(1);
   let result;
 
   const next = function() {
@@ -14,35 +13,51 @@ var parseJSON = function(json) {
     return char;
   };
 
-  const value = function() {};
+  const value = function() {
+    if (char === '{') {
+      return object();
+    }
+    if (char === '[') {
+      return array();
+    }
+    if (char === '"') {
+      return string();
+    }
+    if (char === 'n') {
+      return nullness();
+    }
+    if (char === 't' || char === 'f') {
+      return boolean(0);
+    }
+    if (char === 'u') {
+      return undef();
+    }
+  };
 
   const array = function() {
-    let arr = [];
     next();
-    while (char !== ']') {
-      let item = value(char);
-      arr.push(item);
+    let result = [];
+    if (char === ']') {
+      return result;
     }
-    return arr;
   };
 
-  const object = function() {
-    let obj = {};
-    next();
-  };
+  const object = function() {};
   const boolean = function() {};
 
   const nullness = function() {};
 
-  const number = function() {
+  const num = function() {
     return char;
   };
 
   const string = function() {};
+
+  const undef = function() {};
 
   result = value();
 
   return result;
 };
 
-// return (new Function("return " + json))();
+// return (new Function("return " + json))(); interesting find although not relevant
