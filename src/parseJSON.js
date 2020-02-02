@@ -37,12 +37,20 @@ var parseJSON = function(json) {
   const array = function() {
     next();
     let result = [];
-    if (char === ']') {
+    if (char === ']' && json[index - 1] === '[') {
       return result;
     }
   };
 
-  const object = function() {};
+  const object = function() {
+    result = {};
+    next();
+    if (char === '}' && json[index - 1] === '{') {
+      return result;
+    }
+    return value();
+  };
+
   const boolean = function() {};
 
   const nullness = function() {};
@@ -51,7 +59,20 @@ var parseJSON = function(json) {
     return char;
   };
 
-  const string = function() {};
+  const string = function() {
+    let result = '';
+    next();
+    let stringEnd = json.indexOf('"', index);
+    if (stringEnd === index) {
+      return result;
+    }
+    while (index !== stringEnd) {
+      result += json[index];
+      next();
+    }
+    next();
+    return result;
+  };
 
   const undef = function() {};
 
