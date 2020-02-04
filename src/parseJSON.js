@@ -10,7 +10,9 @@ var parseJSON = function(json) {
   const next = function() {
     index++;
     char = json.charAt(index);
-    return char;
+    if (char === ':' || char === ' ') {
+      next();
+    }
   };
 
   const value = function() {
@@ -40,15 +42,36 @@ var parseJSON = function(json) {
     if (char === ']' && json[index - 1] === '[') {
       return result;
     }
+    result.push(value());
+    if (json[index] === ',') {
+      next();
+      result.push(value());
+    }
+    return result;
   };
 
   const object = function() {
+    let prop;
     result = {};
+
     next();
     if (char === '}' && json[index - 1] === '{') {
       return result;
     }
-    return value();
+    if (json[index - 1] === '{') {
+      prop = value();
+    }
+    if (json[index - 2] === ':') {
+      result[prop] = value();
+    }
+    if (json[index] === ',') {
+      next();
+      prop = value();
+      result[prop] = value();
+    }
+    if (char === '}') {
+      return result;
+    }
   };
 
   const boolean = function() {};
