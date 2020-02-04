@@ -31,6 +31,9 @@ var parseJSON = function(json) {
     if (char === 't' || char === 'f') {
       return boolean(0);
     }
+    if (Number.isInteger(parseInt(char)) || char === '-') {
+      return num();
+    }
     if (char === 'u') {
       return undef();
     }
@@ -38,7 +41,7 @@ var parseJSON = function(json) {
 
   const array = function() {
     next();
-    let result = [];
+    result = [];
     if (char === ']' && json[index - 1] === '[') {
       return result;
     }
@@ -61,13 +64,14 @@ var parseJSON = function(json) {
     if (json[index - 1] === '{') {
       prop = value();
     }
-    if (json[index - 2] === ':') {
-      result[prop] = value();
-    }
-    if (char === ',') {
-      next();
-      prop = value();
-      result[prop] = value();
+    while (index < json.length - 1) {
+      if (json[index - 2] === ':') {
+        result[prop] = value();
+      }
+      if (char === ',') {
+        next();
+        prop = value();
+      }
     }
     if (char === '}') {
       return result;
@@ -93,7 +97,13 @@ var parseJSON = function(json) {
   };
 
   const num = function() {
-    return char;
+    let numString = '';
+
+    while (Number.isInteger(parseInt(char)) || char === '.' || char === '-') {
+      numString += char;
+      next();
+    }
+    return parseFloat(numString);
   };
 
   const string = function() {
