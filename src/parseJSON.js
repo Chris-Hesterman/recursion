@@ -43,7 +43,7 @@ var parseJSON = function(json) {
       return result;
     }
     result.push(value());
-    if (json[index] === ',') {
+    while (char === ',') {
       next();
       result.push(value());
     }
@@ -64,7 +64,7 @@ var parseJSON = function(json) {
     if (json[index - 2] === ':') {
       result[prop] = value();
     }
-    if (json[index] === ',') {
+    if (char === ',') {
       next();
       prop = value();
       result[prop] = value();
@@ -74,9 +74,23 @@ var parseJSON = function(json) {
     }
   };
 
-  const boolean = function() {};
+  const boolean = function() {
+    if (char === 't') {
+      index += 3;
+      next();
+      return true;
+    } else {
+      index += 4;
+      next();
+      return false;
+    }
+  };
 
-  const nullness = function() {};
+  const nullness = function() {
+    index += 3;
+    next();
+    return null;
+  };
 
   const num = function() {
     return char;
@@ -87,6 +101,7 @@ var parseJSON = function(json) {
     next();
     let stringEnd = json.indexOf('"', index);
     if (stringEnd === index) {
+      next();
       return result;
     }
     while (index !== stringEnd) {
