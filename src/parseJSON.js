@@ -41,32 +41,32 @@ var parseJSON = function(json) {
 
   const array = function() {
     next();
-    result = [];
+    let newArr = [];
     if (char === ']' && json[index - 1] === '[') {
-      return result;
+      return newArr;
     }
-    result.push(value());
+    newArr.push(value());
     while (char === ',') {
       next();
-      result.push(value());
+      newArr.push(value());
     }
-    return result;
+    return newArr;
   };
 
   const object = function() {
     let prop;
-    result = {};
+    let newObj = {};
 
     next();
     if (char === '}' && json[index - 1] === '{') {
-      return result;
+      return newObj;
     }
     if (json[index - 1] === '{') {
       prop = value();
     }
     while (index < json.length - 1) {
-      if (json[index - 2] === ':') {
-        result[prop] = value();
+      if (json[index - 2] === ':' || json[index - 1] === ':') {
+        newObj[prop] = value();
       }
       if (char === ',') {
         next();
@@ -74,7 +74,7 @@ var parseJSON = function(json) {
       }
     }
     if (char === '}') {
-      return result;
+      return newObj;
     }
   };
 
@@ -107,19 +107,22 @@ var parseJSON = function(json) {
   };
 
   const string = function() {
-    let result = '';
+    let newStr = '';
     next();
     let stringEnd = json.indexOf('"', index);
     if (stringEnd === index) {
       next();
-      return result;
+      return newStr;
     }
     while (index !== stringEnd) {
-      result += json[index];
+      if (json[index - 1] === ' ') {
+        newStr += ' ';
+      }
+      newStr += json[index];
       next();
     }
     next();
-    return result;
+    return newStr;
   };
 
   const undef = function() {};
