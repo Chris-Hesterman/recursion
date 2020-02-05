@@ -72,7 +72,15 @@ var parseJSON = function(json) {
         next();
         prop = value();
       } else if (char === '}') {
+        next();
         return newObj;
+      } else {
+        next();
+        if (index === json.length - 1) {
+          return newObj;
+        } else {
+          prop = value();
+        }
       }
     }
   };
