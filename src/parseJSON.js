@@ -71,10 +71,9 @@ var parseJSON = function(json) {
       if (char === ',') {
         next();
         prop = value();
+      } else if (char === '}') {
+        return newObj;
       }
-    }
-    if (char === '}') {
-      return newObj;
     }
   };
 
@@ -128,7 +127,6 @@ var parseJSON = function(json) {
   const undef = function() {};
 
   result = value();
-
   return result;
 };
 
