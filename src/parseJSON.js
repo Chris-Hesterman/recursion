@@ -63,11 +63,14 @@ var parseJSON = function(json) {
       next();
       return newObj;
     }
-    if (json[index - 1] === '{') {
+    if (json[index - 1] === '{' || json[index - 2] === '{') {
       prop = value();
     }
     while (index < json.length - 1) {
-      if (json[index - 2] === ':' || json[index - 1] === ':') {
+      if (prop) {
+        while (char === ' ') {
+          next();
+        }
         newObj[prop] = value();
       }
       if (char === ',') {
