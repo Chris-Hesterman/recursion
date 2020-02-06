@@ -29,7 +29,7 @@ var parseJSON = function(json) {
       return nullness();
     }
     if (char === 't' || char === 'f') {
-      return boolean(0);
+      return boolean();
     }
     if (Number.isInteger(parseInt(char)) || char === '-') {
       return num();
@@ -43,6 +43,7 @@ var parseJSON = function(json) {
     next();
     let newArr = [];
     if (char === ']' && json[index - 1] === '[') {
+      next();
       return newArr;
     }
     newArr.push(value());
@@ -59,6 +60,7 @@ var parseJSON = function(json) {
 
     next();
     if (char === '}' && json[index - 1] === '{') {
+      next();
       return newObj;
     }
     if (json[index - 1] === '{') {
