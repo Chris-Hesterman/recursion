@@ -89,20 +89,36 @@ var parseJSON = function(json) {
 
   const boolean = function() {
     if (char === 't') {
-      index += 3;
-      next();
-      return true;
+      let tempTru = json.slice(index, index + 4);
+      if (tempTru === 'true') {
+        index += 3;
+        next();
+        return true;
+      }
+      index--;
+      return string();
     } else {
-      index += 4;
-      next();
-      return false;
+      let tempFalse = json.slice(index, index + 5);
+      if (tempFalse === 'false') {
+        index += 4;
+        next();
+        return false;
+      }
+      index--;
+      return string();
     }
   };
 
   const nullness = function() {
-    index += 3;
-    next();
-    return null;
+    let tempNull = json.slice(index, index + 4);
+    if (tempNull === 'null') {
+      index += 3;
+      next();
+      return null;
+    } else {
+      index--;
+      return string();
+    }
   };
 
   const num = function() {
@@ -119,6 +135,9 @@ var parseJSON = function(json) {
     let newStr = '';
     next();
     let stringEnd = json.indexOf('"', index);
+    while (json[stringEnd - 1] === '\\') {
+      stringEnd = json.indexOf('"', stringEnd + 1);
+    }
     if (stringEnd === index) {
       next();
       return newStr;
@@ -126,6 +145,12 @@ var parseJSON = function(json) {
     while (index !== stringEnd) {
       if (json[index - 1] === ' ') {
         newStr += ' ';
+      }
+      while (char === '\\' && json[index - 1] === '\\') {
+        next();
+      }
+      if (char === '\\' && json[index + 1] !== '\\') {
+        next();
       }
       newStr += json[index];
       next();
