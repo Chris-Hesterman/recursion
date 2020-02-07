@@ -34,9 +34,6 @@ var parseJSON = function(json) {
     if (Number.isInteger(parseInt(char)) || char === '-') {
       return num();
     }
-    if (char === 'u') {
-      return undef();
-    }
   };
 
   const array = function() {
@@ -122,10 +119,9 @@ var parseJSON = function(json) {
       index += 3;
       next();
       return null;
-    } else {
-      index--;
-      return string();
     }
+    index--;
+    return string();
   };
 
   const num = function() {
@@ -169,13 +165,10 @@ var parseJSON = function(json) {
       next();
     }
     next();
-
     return newStr;
   };
-
-  const undef = function() {};
 
   return value();
 };
 
-// return (new Function("return " + json))(); interesting find although not relevant
+// (new Function("return " + json))(); interesting find although not relevant one liner
