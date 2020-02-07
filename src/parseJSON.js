@@ -6,11 +6,13 @@ var parseJSON = function(json) {
   let index = 0;
   let char = json.charAt(index);
   let result;
+  let isString = false;
 
   const next = function() {
     index++;
     char = json.charAt(index);
-    if (char === ':' || char === ' ') {
+
+    if (char === ' ' || char === ':') {
       next();
     }
   };
@@ -51,7 +53,11 @@ var parseJSON = function(json) {
       next();
       newArr.push(value());
     }
-    return newArr;
+    if (char === ']') {
+      return newArr;
+    } else {
+      throw SyntaxError();
+    }
   };
 
   const object = function() {
@@ -135,6 +141,7 @@ var parseJSON = function(json) {
   };
 
   const string = function() {
+    isString = true;
     let newStr = '';
     next();
     let stringEnd = json.indexOf('"', index);
@@ -146,8 +153,14 @@ var parseJSON = function(json) {
       return newStr;
     }
     while (index !== stringEnd) {
+      if (stringEnd === -1) {
+        throw SyntaxError();
+      }
       if (json[index - 1] === ' ') {
         newStr += ' ';
+      }
+      if (json[index - 1] === ':') {
+        newStr += ':';
       }
       while (char === '\\' && json[index - 1] === '\\') {
         next();
@@ -159,12 +172,14 @@ var parseJSON = function(json) {
       next();
     }
     next();
+    isString = false;
     return newStr;
   };
 
   const undef = function() {};
 
   result = value();
+  console.log(result);
   return result;
 };
 
