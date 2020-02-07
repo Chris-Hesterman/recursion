@@ -5,8 +5,6 @@
 var parseJSON = function(json) {
   let index = 0;
   let char = json.charAt(index);
-  let result;
-  let isString = false;
 
   const next = function() {
     index++;
@@ -141,7 +139,6 @@ var parseJSON = function(json) {
   };
 
   const string = function() {
-    isString = true;
     let newStr = '';
     next();
     let stringEnd = json.indexOf('"', index);
@@ -172,15 +169,13 @@ var parseJSON = function(json) {
       next();
     }
     next();
-    isString = false;
+
     return newStr;
   };
 
   const undef = function() {};
 
-  result = value();
-  console.log(result);
-  return result;
+  return value();
 };
 
 // return (new Function("return " + json))(); interesting find although not relevant
